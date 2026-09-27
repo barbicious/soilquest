@@ -54,16 +54,21 @@ pub fn splat(self: *Renderer) void {
 pub fn blitTexture(self: *Renderer, texture_id: usize, src: math.Rect(u32), dst: math.Point(i32), colors: [Texture.channels]usize) void {
     const texture = Texture.registry.textures.items[texture_id];
 
-    _ = dst;
     for (0..src.h) |y| {
+        const py = y + @as(usize, @intCast(dst.y));
+        if (py < 0 or py >= PixelBuffer.height) { continue; }
+
         for (0..src.w) |x| {
-            const pixel = texture.pixelAt(x, y);
+            const px = x + @as(usize, @intCast(dst.x));
+            if (px < 0 or px >= PixelBuffer.width) { continue; }
+
+            const pixel = texture.pixelAt(x + @as(usize, @intCast(src.x)), y + @as(usize, @intCast(src.y)));
 
             if (pixel == Texture.transparent_pixel) {
                 continue;
             }
 
-            self.pixel_buffer.setPixel(x, y, self.palette.shades[colors[pixel]]);
+            self.pixel_buffer.setPixel(px, py, self.palette.shades[colors[pixel]]);
         }
     }
 }

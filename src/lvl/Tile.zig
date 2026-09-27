@@ -40,11 +40,41 @@ pub fn blit(self: *const Tile, renderer: *Renderer, x: i32, y: i32) void {
     renderer.blitTexture(self.id, .{
         .x = 0,
         .y = 0,
-        .w = 16,
-        .h = 16,
+        .w = 8,
+        .h = 8,
     }, .{
         .x = x,
         .y = y,
+    }, self.colors);
+
+    renderer.blitTexture(self.id, .{
+        .x = 16,
+        .y = 0,
+        .w = 8,
+        .h = 8,
+    }, .{
+        .x = x + 8,
+        .y = y,
+    }, self.colors);
+
+    renderer.blitTexture(self.id, .{
+        .x = 0,
+        .y = 16,
+        .w = 8,
+        .h = 8,
+    }, .{
+        .x = x,
+        .y = y + 8,
+    }, self.colors);
+
+    renderer.blitTexture(self.id, .{
+        .x = 16,
+        .y = 16,
+        .w = 8,
+        .h = 8,
+    }, .{
+        .x = x + 8,
+        .y = y + 8,
     }, self.colors);
 }
 
@@ -55,28 +85,21 @@ pub const Registry = struct {
     pub fn init(io: std.Io, allocator: std.mem.Allocator) !void {
         var names: std.StringHashMap(usize) = .init(allocator);
         var tiles: std.ArrayList(Tile) = .empty;
-        std.log.debug("{any}", .{Texture.registry.names.contains("liquid")});
 
         var tile_dir = try std.Io.Dir.cwd().openDir(io, "res/tiles", .{ .iterate = true });
 
         var iter = tile_dir.iterate();
-        std.log.debug("{any}", .{Texture.registry.names.contains("liquid")});
 
         while (try iter.next(io)) |entry| {
             if (entry.kind == .file) {
                 const src: [:0]const u8 = try allocator.dupeSentinel(u8, try std.Io.Dir.readFileAlloc(tile_dir, io, entry.name, allocator, .unlimited), 0);
                 defer allocator.free(src);
 
-                var split = std.mem.splitAny(u8, entry.name, ".");
-                const name = try allocator.dupe(u8, split.first());
-                errdefer allocator.free(name);
-
                 const tile_id = tiles.items.len;
 
-                try names.put(name, tile_id);
 
                 const payload = try std.zon.parse.fromSliceAlloc(Payload, allocator, src, null, .{});
-                std.log.debug("{any}", .{Texture.registry.names.contains("liquid")});
+                try names.put(payload.name, tile_id);
 
                 try tiles.append(allocator, .init(payload, tile_id));
             }
@@ -90,12 +113,6 @@ pub const Registry = struct {
 
     pub fn deinit(self: *Registry, allocator: std.mem.Allocator) void {
         self.tiles.deinit(allocator);
-
-        var key_iter = self.names.keyIterator();
-        while (key_iter.next()) |key| {
-            allocator.free(key.*);
-        }
-
         self.names.deinit();
     }
 };

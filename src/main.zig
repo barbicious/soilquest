@@ -19,7 +19,7 @@ pub fn main(init: std.process.Init) !void {
     try Tile.Registry.init(io, allocator);
     defer Tile.registry.deinit(allocator);
 
-    const grass_tile = Tile.registry.tiles.items[0];
+    const grass_tile = Tile.registry.tiles.items[Tile.registry.names.get("soilquest@grass").?];
 
     if (!c.SDL_Init(c.SDL_INIT_VIDEO)) {
         return error.FailedToInitSDL;
@@ -45,7 +45,13 @@ pub fn main(init: std.process.Init) !void {
 
         renderer.flush();
 
-        grass_tile.blit(&renderer, 0, 0);
+        var y: i32 = 0;
+        while (y < 30) : (y += 1) {
+            var x: i32 = 0;
+            while (x < 30) : (x += 1) {
+                grass_tile.blit(&renderer, x * 16, y * 16);
+            }
+        }
 
         renderer.splat();
     }
