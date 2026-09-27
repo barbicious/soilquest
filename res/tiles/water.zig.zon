@@ -1,0 +1,10 @@
+.{
+    .name = "soilquest@water",
+    .colors = .{
+        .{ 4, 3, 2 },
+        .{ 3, 2, 1 },
+        .{ 1, 1, 4 },
+        .{ 2, 2, 5 },
+    },
+    .texture_name = "liquid",
+}
