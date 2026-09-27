@@ -28,6 +28,12 @@ pub fn build(b: *std.Build) void {
 
     exe.root_module.linkSystemLibrary("SDL3", .{});
 
+    exe.root_module.addCSourceFile(.{
+        .file = b.path("vendor/stb/stb.c"),
+    });
+
+    exe.root_module.addIncludePath(b.path("vendor"));
+
     b.installArtifact(exe);
 
     const run_step = b.step("run", "Run the app");

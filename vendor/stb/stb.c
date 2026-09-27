@@ -1,4 +1,2 @@
-#pragma once
-
-#include <SDL3/SDL.h>
+#define STB_IMAGE_IMPLEMENTATION
 #include "../vendor/stb/stb_image.h"
