@@ -9,6 +9,9 @@ const Renderer = @import("../gfx/Renderer.zig");
 
 pub var registry: Registry = undefined;
 
+pub const width: i32 = 16;
+pub const height: i32 = 16;
+
 pub const NeighborsCheck = enum {
     zero,
     four,
@@ -20,7 +23,6 @@ pub const Payload = struct {
     colors: [Texture.channels][color.channels]usize,
     texture_name: []const u8,
 };
-
 
 id: usize,
 colors: [Texture.channels]usize,
@@ -96,7 +98,6 @@ pub const Registry = struct {
                 defer allocator.free(src);
 
                 const tile_id = tiles.items.len;
-
 
                 const payload = try std.zon.parse.fromSliceAlloc(Payload, allocator, src, null, .{});
                 try names.put(payload.name, tile_id);

@@ -5,7 +5,7 @@
       <list><![CDATA[{
   "name": "soilquest",
   "version": "0.0.0",
-  "path": "/home/barbicious/zig/soilquest",
+  "path": "/home/barbicious/CLionProjects/soilquest",
   "steps": [
     {
       "name": "install",

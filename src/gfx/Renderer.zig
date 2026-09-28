@@ -8,7 +8,7 @@ const Texture = @import("Texture.zig");
 const math = @import("../math.zig");
 
 screen: *c.SDL_Texture,
-renderer:*c.SDL_Renderer,
+renderer: *c.SDL_Renderer,
 pixel_buffer: PixelBuffer,
 palette: Palette,
 
@@ -56,11 +56,15 @@ pub fn blitTexture(self: *Renderer, texture_id: usize, src: math.Rect(u32), dst:
 
     for (0..src.h) |y| {
         const py = y + @as(usize, @intCast(dst.y));
-        if (py < 0 or py >= PixelBuffer.height) { continue; }
+        if (py < 0 or py >= PixelBuffer.height) {
+            continue;
+        }
 
         for (0..src.w) |x| {
             const px = x + @as(usize, @intCast(dst.x));
-            if (px < 0 or px >= PixelBuffer.width) { continue; }
+            if (px < 0 or px >= PixelBuffer.width) {
+                continue;
+            }
 
             const pixel = texture.pixelAt(x + @as(usize, @intCast(src.x)), y + @as(usize, @intCast(src.y)));
 
