@@ -1,6 +1,12 @@
 .{
     .name = .soilquest,
     .version = "0.0.0",
+    .dependencies = .{
+        .sdl = .{
+            .url = "git+https://github.com/LukeNeumann/SDL3#ed29d8e93d255f6269428695e0079d2d37563644",
+            .hash = "sdl-1.0.1+3.4.4-i4QD0cLBqQBd6PtwnJ906qMF-6Bx7TWYo1kYRUZAmtD7",
+        },
+    },
     .fingerprint = 0xc2c190b4c63edb4c, // Changing this has security and trust implications.
     .minimum_zig_version = "0.16.0",
     .paths = .{

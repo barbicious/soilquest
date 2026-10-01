@@ -1,7 +1,7 @@
 const State = @This();
 
 const std = @import("std");
-const c = @import("c");
+const sdl = @import("sdl");
 
 const Renderer = @import("gfx/Renderer.zig");
 const Texture = @import("gfx/Texture.zig");
@@ -14,7 +14,7 @@ const max_ticks: f32 = 1.0 / 60.0;
 
 renderer: Renderer,
 level: Level,
-window: *c.SDL_Window,
+window: *sdl.SDL_Window,
 
 pub fn init(allocator: std.mem.Allocator, io: std.Io) !State {
     try Texture.Registry.init(io, allocator);
@@ -22,11 +22,11 @@ pub fn init(allocator: std.mem.Allocator, io: std.Io) !State {
 
     Keyboard.init();
 
-    if (!c.SDL_Init(c.SDL_INIT_VIDEO)) {
+    if (!sdl.SDL_Init(sdl.SDL_INIT_VIDEO)) {
         return error.FailedToInitSDL;
     }
 
-    const window = c.SDL_CreateWindow("Soilquest", 1280, 720, 0) orelse return error.FailedToCreateWindow;
+    const window = sdl.SDL_CreateWindow("Soilquest", 1280, 720, 0) orelse return error.FailedToCreateWindow;
 
     return .{ .renderer = try .init(window), .window = window, .level = .init() };
 }
@@ -34,9 +34,9 @@ pub fn init(allocator: std.mem.Allocator, io: std.Io) !State {
 pub fn deinit(self: *State, allocator: std.mem.Allocator) void {
     self.renderer.deinit();
 
-    c.SDL_DestroyWindow(self.window);
+    sdl.SDL_DestroyWindow(self.window);
 
-    c.SDL_Quit();
+    sdl.SDL_Quit();
 
     Texture.registry.deinit(allocator);
     Tile.registry.deinit(allocator);
@@ -45,7 +45,7 @@ pub fn deinit(self: *State, allocator: std.mem.Allocator) void {
 pub fn run(self: *State, io: std.Io) void {
     var running = true;
 
-    var event: c.SDL_Event = undefined;
+    var event: sdl.SDL_Event = undefined;
 
     var player: Pawn = .init(.player, 20, 16);
 
@@ -53,8 +53,8 @@ pub fn run(self: *State, io: std.Io) void {
     var accumulated: f32 = 0.0;
 
     while (running) {
-        while (c.SDL_PollEvent(&event)) {
-            if (event.type == c.SDL_EVENT_QUIT) {
+        while (sdl.SDL_PollEvent(&event)) {
+            if (event.type == sdl.SDL_EVENT_QUIT) {
                 running = false;
             }
         }

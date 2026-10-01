@@ -10,6 +10,11 @@ pub fn build(b: *std.Build) void {
         .target = target
     });
 
+    const sdl_dep = b.dependency("sdl", .{
+        .optimize = optimize,
+        .target = target
+    });
+
     const exe = b.addExecutable(.{
         .name = "soilquest",
         .root_module = b.createModule(.{
@@ -19,14 +24,16 @@ pub fn build(b: *std.Build) void {
             .link_libc = true,
             .imports = &.{
                 .{
+                    .name = "sdl",
+                    .module = sdl_dep.module("sdl3"),
+                },
+                .{
                     .name = "c",
                     .module = translate_c.createModule(),
                 }
             },
         }),
     });
-
-    exe.root_module.linkSystemLibrary("SDL3", .{});
 
     exe.root_module.addCSourceFile(.{
         .file = b.path("vendor/stb/stb.c"),

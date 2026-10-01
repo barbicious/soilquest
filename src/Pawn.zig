@@ -1,7 +1,7 @@
 const Pawn = @This();
 
 const math = @import("math.zig");
-const c = @import("c");
+const sdl = @import("sdl");
 const std = @import("std");
 
 const Texture = @import("gfx/Texture.zig");
@@ -52,21 +52,21 @@ pub fn blit(self: *Pawn, renderer: *Renderer) void {
 }
 
 pub fn tick(self: *Pawn) void {
-    if (Keyboard.keyboard.isKeyDown(c.SDL_SCANCODE_A)) {
+    if (Keyboard.keyboard.isKeyDown(sdl.SDL_SCANCODE_A)) {
         self.pos.x -= 1;
     }
 
-    if (Keyboard.keyboard.isKeyDown(c.SDL_SCANCODE_D)) {
+    if (Keyboard.keyboard.isKeyDown(sdl.SDL_SCANCODE_D)) {
         self.pos.x += 1;
     }
 
     self.pos.x = std.math.clamp(self.pos.x, 0, @as(i32, @intCast((Level.width - 1) * Tile.width)));
 
-    if (Keyboard.keyboard.isKeyDown(c.SDL_SCANCODE_W)) {
+    if (Keyboard.keyboard.isKeyDown(sdl.SDL_SCANCODE_W)) {
         self.pos.y -= 1;
     }
 
-    if (Keyboard.keyboard.isKeyDown(c.SDL_SCANCODE_S)) {
+    if (Keyboard.keyboard.isKeyDown(sdl.SDL_SCANCODE_S)) {
         self.pos.y += 1;
     }
 

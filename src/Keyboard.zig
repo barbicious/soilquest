@@ -2,7 +2,7 @@ const Keyboard = @This();
 
 pub var keyboard: Keyboard = undefined;
 
-const c = @import("c");
+const c = @import("sdl");
 const std = @import("std");
 
 previous_keys: [c.SDL_SCANCODE_COUNT]bool,
